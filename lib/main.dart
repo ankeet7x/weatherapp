@@ -46,9 +46,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    // this.getWeather(cityname);
+  void dispose() {
+    cityController.dispose();
+    super.dispose();
   }
 
   @override
@@ -56,46 +56,75 @@ class _HomePageState extends State<HomePage> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: primaryColor,
-      body: Column(
-        children: [
-          SizedBox(
-            height: size.height * 0.04,
-          ),
-          Center(
-            child: Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: secondaryColor),
-              width: size.width / 1.20,
-              height: 50,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 20.0),
-                      child: TextField(
-                        controller: cityController,
-                        decoration: InputDecoration(
-                          hintText: "Enter a city",
-                          hintStyle: TextStyle(color: primaryColor),
-                          border: InputBorder.none,
-                          enabledBorder: InputBorder.none,
+      body: Center(
+        child: Column(
+          children: [
+            SizedBox(
+              height: size.height * 0.07,
+            ),
+            Center(
+              child: Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: secondaryColor),
+                width: size.width / 1.20,
+                height: 50,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 20.0),
+                        child: TextField(
+                          controller: cityController,
+                          decoration: InputDecoration(
+                            hintText: "Enter a city",
+                            hintStyle: TextStyle(color: primaryColor),
+                            border: InputBorder.none,
+                            enabledBorder: InputBorder.none,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.search),
-                    onPressed: () {
-                      cityname = cityController.text;
-                      getWeather(cityname);
-                    },
-                  )
-                ],
+                    IconButton(
+                      icon: Icon(
+                        Icons.search,
+                        color: primaryColor,
+                      ),
+                      onPressed: () {
+                        cityname = cityController.text;
+                        getWeather(cityname);
+                      },
+                    )
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+            Padding(
+              padding: const EdgeInsets.only(top: 28.0),
+              child: Text(
+                cityname != null ? cityname : '-',
+                style: TextStyle(
+                    color: secondaryColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 30),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 25),
+              child: Text(
+                temp != null ? (temp - 273).toStringAsFixed(2) + "°C" : '-',
+                style: TextStyle(color: secondaryColor, fontSize: 20),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 25),
+              child: Text(
+                weather != null ? weather.toString() : '-',
+                style: TextStyle(color: secondaryColor, fontSize: 22),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
