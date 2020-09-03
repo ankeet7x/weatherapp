@@ -1,7 +1,7 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:weatherapp/components/colors.dart';
 
 void main() => runApp(MyApp());
 
@@ -22,11 +22,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  TextEditingController cityController = TextEditingController();
+
   var temp;
   var humidity;
   var country;
   var name;
   var weather;
+  String cityname;
 
   Future getWeather(String city) async {
     http.Response response = await http.get(
@@ -45,15 +48,59 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    this.getWeather("Pokhara");
+    // this.getWeather(cityname);
   }
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
-        body: Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Text(weather != null ? weather.toString() : "Loading"),
-    ));
+      backgroundColor: primaryColor,
+      body: Column(
+        children: [
+          SizedBox(
+            height: size.height * 0.04,
+          ),
+          Center(
+            child: Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: secondaryColor),
+              width: size.width / 1.20,
+              height: 50,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 20.0),
+                      child: TextField(
+                        controller: cityController,
+                        decoration: InputDecoration(
+                          hintText: "Enter a city",
+                          hintStyle: TextStyle(color: primaryColor),
+                          border: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                        ),
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.search),
+                    onPressed: () {
+                      cityname = cityController.text;
+                      getWeather(cityname);
+                    },
+                  )
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
+
+// Text(name != null ? name.toString() : "Enter a city"),
+//           Text(humidity != null ? humidity.toString() : null),
+//           Text(temp != null ? temp.toString() : null)
